@@ -115,7 +115,7 @@ int main() {
                     fp = fopen("/sd/mydir/debugdata.txt","r");
                     for(int i = 0; i < 10; i++) {
                         fgets(str,100,fp);
-                        com.puts(str);
+                        sat.puts(str);
                     }
                     fclose(fp);
                     sattime.stop();
@@ -189,24 +189,27 @@ int main() {
                 }
             case XBEE_LINK_CMD:
                 sat.printf(">> %c: Check uplink and downlink with Xbee\r\n",XBEE_LINK_CMD);
-                com.initialize();
-                com.xbee_receive(&rcmd,&cmdflag);
-                sat.printf(">>>> Hit 'a' as an uplink command\r\n");
-                while(1){
-                    if (cmdflag == 1) {
-                        if (rcmd == 'a') {
-                            sattime.start();
-                            sat.printf(">>>> Command Get, rcmd: %d\r\n",rcmd);
-                            com.printf(">>>> HEPTA Uplink OK, rcmd: %d\r\n",rcmd);
-                            for(int j=0;j<10;j++){
-                                com.printf(">>>> Sat Time = %f [s]\r\n",sattime.read());
-                                wait_ms(500);
-                            }
-                            end_confirmation(); 
-                            break;
-                        }
-                    }
+                for(int i = 0; i < 10; i++) {
                     com.initialize();
+                    com.xbee_receive(&rcmd,&cmdflag);
+                    sat.printf(">>>> Hit 'a' as an uplink command\r\n");
+                    while(1){
+                        if (cmdflag == 1) {
+                            if (rcmd == 'a') {
+                                sattime.start();
+                                sat.printf(">>>> Command Get, rcmd: %d\r\n",rcmd);
+                                com.printf(">>>> HEPTA Uplink OK, rcmd: %d\r\n",rcmd);
+                                for(int j=0;j<10;j++){
+                                    com.printf(">>>> Sat Time = %f [s]\r\n",sattime.read());
+                                    wait_ms(500);
+                                }
+                                end_confirmation(); 
+                                break;
+                            }
+                        }
+                        com.initialize();
+                    }
+                    wait(1);
                 }
                 break;
             case AUTO_CHECK_MODE_CMD:
@@ -234,7 +237,7 @@ void end_confirmation(){
         myleds[2] = 0;
         myleds[3] = 0;
         wait_ms(200);
-        sat.printf(">>>> Finish!! n\r\n");
+        sat.printf(">>>> Finish!! \r\n\r\n");
     }
 }
 /*====================================================*/
