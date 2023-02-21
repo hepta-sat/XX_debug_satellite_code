@@ -189,26 +189,23 @@ int main() {
                 }
             case XBEE_LINK_CMD:
                 sat.printf(">> %c: Check uplink and downlink with Xbee\r\n",XBEE_LINK_CMD);
-                for(int i = 0; i < 10; i++) {
-                    com.initialize();
+                while(1){
                     com.xbee_receive(&rcmd,&cmdflag);
                     sat.printf(">>>> Hit 'a' as an uplink command\r\n");
-                    while(1){
-                        if (cmdflag == 1) {
-                            if (rcmd == 'a') {
-                                sattime.start();
-                                sat.printf(">>>> Command Get, rcmd: %d\r\n",rcmd);
-                                com.printf(">>>> HEPTA Uplink OK, rcmd: %d\r\n",rcmd);
-                                for(int j=0;j<10;j++){
-                                    com.printf(">>>> Sat Time = %f [s]\r\n",sattime.read());
-                                    wait_ms(500);
-                                }
-                                end_confirmation(); 
-                                break;
+                    if (cmdflag == 1) {
+                        if (rcmd == 'a') {
+                            sattime.start();
+                            sat.printf(">>>> Command Get, rcmd: %d\r\n",rcmd);
+                            com.printf(">>>> HEPTA Uplink OK, rcmd: %d\r\n",rcmd);
+                            for(int j=0;j<10;j++){
+                                com.printf(">>>> Sat Time = %f [s]\r\n",sattime.read());
+                                wait_ms(500);
                             }
+                            end_confirmation(); 
+                            break;
                         }
-                        com.initialize();
                     }
+                    com.initialize();
                     wait(1);
                 }
                 break;
@@ -237,7 +234,7 @@ void end_confirmation(){
         myleds[2] = 0;
         myleds[3] = 0;
         wait_ms(200);
-        sat.printf(">>>> Finish!! \r\n\r\n");
     }
+    sat.printf(">>>> Finish!! \r\n\r\n");
 }
 /*====================================================*/
